@@ -1,0 +1,75 @@
+ library IEEE; 
+use IEEE.STD_LOGIC_1164.ALL; use IEEE.STD_LOGIC_ARITH.ALL; use IEEE.STD_LOGIC_UNSIGNED.ALL; 
+ 
+ package mem is 
+  constant   width :integer := 4;   constant memsize :integer := 8 ; 
+ 	 	type meory is array(0 to (memsize-1))of std_logic_vector 
+((width-1) downto 0);  end package mem; 
+  library IEEE; 
+use IEEE.STD_LOGIC_1164.ALL; use IEEE.STD_LOGIC_ARITH.ALL; use IEEE.STD_LOGIC_UNSIGNED.ALL; use work.mem.all; 
+ 
+  
+ entity fifo is 
+    Port (  clk   :  in  STD_LOGIC; 
+              rst : in  STD_LOGIC; 
+ 	 	 	 	   rd : in  STD_LOGIC; 
+ 	 	 	 	 	wr : in  STD_LOGIC; 
+ 	 	 	  datain : in  STD_LOGIC_VECTOR (3 downto 0); 
+ 	 	 	 memfull : out STD_LOGIC; 
+           mememp : out STD_LOGIC; 
+          dataout : out STD_LOGIC_VECTOR (3 downto 0)); 
+ 	 	 	 	 	 
+ end fifo; 
+    
+architecture Behavioral of fifo is 
+ 
+ 
+  signal   cdiv : std_logic_vector(25 downto 0);          -  1 Hz @ 1  sec  
+--  	signal    clk : std_logic;  	   signal ramtmp : meory;  	   signal   cntr : std_logic_vector(2 downto 0); 
+ 	   signal rdptr , wrptr : std_logic_vector(2 downto 0); 
+ 	 	 	 	 
+begin 
+-- P1: process(mclk,rst) -- system clk  
+-- 
+-- begin 
+--    
+-- 
+-- 
+-- 	 	if rst = '1' then 
+-- 	 	 	 	cdiv <= ( others => '0'); 
+-- 	 	  
+--      elsif mclk'event and mclk = '1' then  
+--  	 	 	cdiv <= cdiv + '1' ;     	  
+--  	 	 	 
+--  	 	 	if ( cdiv = "10111110101111000010000000" ) then    
+--  1 Hz @ 1  sec 	
+--  	 	 	 	 
+ 	         50 Hz @ 2 msec 	    --  0100110001001011010000000 
+--  	 	 	 	 	 	 	 	 	 	 
+ 	 	 	 	 	 	 	 	 	 	 	 
+ 	 	 	 	 	 	 	 
+--  	 	 	 	 	 clk <= '1'; 
+--  	 	 	 	 	cdiv <= (others =>'0'); 
+--  	 	 	 	 
+--  	 	   else  	 
+--  	 	 	 	 
+--            end if; 
+--  	end if;   	 clk <= '0'; 
+--  
+-- end process;   
+  
+memoryfull_empty : process(cntr,rdptr,wrptr) -- memoryfull_empty process 
+ begin  
+ 	 	   if(cntr = "000")and(rdptr = wrptr) then 
+ 	 	 
+ 	 	 	 	memfull <= '0';  	 	 	 	 mememp <= '1'; 
+ 	 	  
+ 	   elsif(cntr = "111")and(rdptr = wrptr) then 
+ 	 	 
+ 	 	 	 	memfull <= '1';  	 	 	 	 mememp <= '0'; 
+ 	 	 	 	  
+ 	 	else 
+ 	 	 
+ 	 	 	 	memfull <= '0';  	 	 	 	 mememp <= '0'; 
+ 	 	 	 	   	 	end if; 
+end process; 
